@@ -7,8 +7,8 @@ Messing around with the Leap Motion controller.
 
 The projects are done using the Leap SDK and Cinder
 
-https://www.leapmotion.com/
-http://libcinder.org/
+<p><b>Leap Motion:</b> https://www.leapmotion.com/</p>
+<p><b>Cinder:</b> http://libcinder.org/</p>
 
 I believe the source will not compile through the solution because it is currently pointing to LeapSDK and Cinder libraries that are not on this repository.  I will fix that later.
 

@@ -34,3 +34,16 @@ void PlayerFish::KillVelocity()
 {
 	m_vVel = Vec2f( 0.0f, 0.0f );
 }
+
+void PlayerFish::Grow( float growth )
+{
+	m_fScaling += growth;
+}
+
+void PlayerFish::ResetPlayer()
+{
+	m_vLoc = Vec2f( app::getWindowWidth() / 2, app::getWindowHeight() / 2 );
+	m_fWidth = 5.0f;
+	m_fHeight = 3.0f;
+	m_fScaling = 10.0f;
+}

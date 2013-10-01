@@ -35,6 +35,8 @@ class LeapFishyApp : public AppNative {
 		void processGesture();
 		Vec2f normalizeCoords( const Leap::Vector& vec );
 		void draw();
+		void resetGame();
+		void killAllEnemyFish();
 		void shutdown();
 
 	private:
@@ -77,6 +79,7 @@ void LeapFishyApp::setup()
 
 void LeapFishyApp::mouseDown( MouseEvent event )
 {
+	resetGame();
 }
 
 void LeapFishyApp::calculateFrameTime()
@@ -117,18 +120,24 @@ void LeapFishyApp::updateFish()
 	{
 		(*i)->Update( m_fFrameTime );
 
-		//If the enemy fish collides with the player fish AND is smaller
-		if( (*i)->m_CollisionVolume.intersects( m_pPlayer->m_CollisionVolume ) &&
-			(*i)->m_fScaling < m_pPlayer->m_fScaling )
+		//Check collisions
+		if( (*i)->m_CollisionVolume.intersects( m_pPlayer->m_CollisionVolume ) )
 		{
-			(*i)->m_bAlive = false;
-		}
-		//If the enemy fish collides with the player fish AND is larger/same size
-		else
-		{
-			//GAME OVER
+			//enemy fish is smaller
+			if( (*i)->m_fScaling < m_pPlayer->m_fScaling ) 
+			{
+				m_pPlayer->Grow( (*i)->m_fScaling / 2.0f );
+				(*i)->m_bAlive = false;
+			}
+			//enemy fish is larger or same size
+			else
+			{
+				resetGame();
+				return;
+			}
 		}
 
+		//Remove Dead fish
 		if( !(*i)->m_bAlive )
 		{
 			delete (*i);
@@ -208,14 +217,29 @@ void LeapFishyApp::shutdown()
 
 	delete m_pPlayer;
 
-	for(	std::list<EnemyFish*>::iterator i = m_pEnemyFishes->begin();
-			i != m_pEnemyFishes->end();
-			++i )
-	{
-		delete (*i);
-	}
+	killAllEnemyFish();
 
 	delete m_pEnemyFishes;
+}
+
+void LeapFishyApp::killAllEnemyFish()
+{
+	for(	std::list<EnemyFish*>::iterator i = m_pEnemyFishes->begin();
+			i != m_pEnemyFishes->end();
+			)
+	{
+		delete (*i);
+		i = m_pEnemyFishes->erase(i);
+	}
+}
+
+void LeapFishyApp::resetGame()
+{
+	killAllEnemyFish();
+
+	m_pPlayer->ResetPlayer();
+
+	SpawnEnemyFish( m_nMinNumFishes );
 }
 
 CINDER_APP_NATIVE( LeapFishyApp, RendererGl )

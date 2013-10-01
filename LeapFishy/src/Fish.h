@@ -35,7 +35,7 @@ class Fish
 		bool m_bAlive;
 
 		Rectf m_CollisionVolume;
-	private:
+
 		float m_fWidth;
 		float m_fHeight;
 		float m_fRoundedCornerRadius;

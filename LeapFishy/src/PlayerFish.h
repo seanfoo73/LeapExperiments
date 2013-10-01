@@ -14,6 +14,10 @@ class PlayerFish : public Fish
 		void AddVelocity( Vec2f vel );
 		void KillVelocity();
 
+		void Grow( float growth );
+
+		void ResetPlayer();
+
 	private:
 };
 

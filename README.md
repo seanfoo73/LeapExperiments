@@ -3,9 +3,10 @@ LeapExperiments
 
 Messing around with the Leap Motion controller.
 
-LeapCinderVectorField.exe - Just wave your fingers over the leap motion.  The arrows should point to the closest finger.
+<b>LeapCinderVectorField.exe</b> - Just wave your fingers over the leap motion controller.  The arrows should point to the closest finger.
 
 The projects are done using the Leap SDK and Cinder
+
 https://www.leapmotion.com/
 http://libcinder.org/
 

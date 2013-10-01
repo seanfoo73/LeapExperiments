@@ -5,10 +5,9 @@ Messing around with the Leap Motion controller.
 
 You can find all demos in the <b>Demos</b> folder.
 
-<b>LeapCinderVectorField.exe</b> - Just wave your fingers over the leap motion controller.  The arrows should point to the closest finger.
-<b>LeapFishy.exe</b> - Swipe to move the fish around.  Right now you can only conusme fishes smaller than you.  More game functionality later.
-
-<b>LeapCinderRain.exe</b> - Right now the rain just bounces off your fingers back into the sky.  This is a WIP.
+<p><b>LeapCinderVectorField.exe</b> - Just wave your fingers over the leap motion controller.  The arrows should point to the closest finger.</p>
+<p><b>LeapFishy.exe</b> - Swipe to move the fish around.  Right now you can only consume fishes smaller than you.  More game functionality later.</p>
+<p><b>LeapCinderRain.exe</b> - Right now the rain just bounces off your fingers back into the sky.  This is a WIP.</p>
 
 The projects are done using the Leap SDK and Cinder
 

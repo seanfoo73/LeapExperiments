@@ -4,28 +4,25 @@
 #include "cinder/ImageIo.h"
 #include "cinder/gl/Texture.h"
 
-#include "Leap.h"
-#include "LeapListener.h"
+#include "Leap.h";
 
-#include "VectorFieldController.h"
+#include "RainController.h";
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class LeapCinderVectorFieldApp : public AppNative {
+class LeapCinderRainApp : public AppNative {
 	public:
 		void prepareSettings( Settings * settings );
 		void setup();
 		void mouseDown( MouseEvent event );	
-		void mouseMove( MouseEvent event );
-		void mouseDrag( MouseEvent event );
-		void update();
 		Vec2f normalizeCoords(const Leap::Vector& vec);
 		void processFingers();
+		void update();
 		void draw();
 		void shutdown();
-		
+
 		void calculateFrameTime();
 
 	private:
@@ -33,19 +30,19 @@ class LeapCinderVectorFieldApp : public AppNative {
 		float m_fFrameTime;
 		float m_fLastTime;
 
-		VectorFieldController* m_VectorField;
+		RainController* m_Rain;
 
-		Controller m_LeapController;
-		LeapListener m_LeapListener;
+		Leap::Controller m_LeapController;
+		Leap::Listener m_LeapListener;
 };
 
-void LeapCinderVectorFieldApp::prepareSettings( Settings* settings )
+void LeapCinderRainApp::prepareSettings( Settings* settings )
 {
 	settings->setWindowSize( 1366, 768 );
 	settings->setFrameRate( 60.0f );
 }
 
-void LeapCinderVectorFieldApp::setup()
+void LeapCinderRainApp::setup()
 {
 	m_LeapController.addListener( m_LeapListener );
 
@@ -54,52 +51,38 @@ void LeapCinderVectorFieldApp::setup()
 	m_fFrameTime = 0;
 
 	/** background image */
-	//m_BGImage = gl::Texture( loadImage( loadAsset( "testBg.jpg" ) ) );
 
 	/** vector field */
-	m_VectorField = new VectorFieldController();
+	m_Rain = new RainController();
 }
 
-void LeapCinderVectorFieldApp::mouseDown( MouseEvent event )
+void LeapCinderRainApp::mouseDown( MouseEvent event )
 {
-	//m_VectorField->ClearPointTo();
-	//m_VectorField->CheckPointTo( event.getPos() );
 }
 
-void LeapCinderVectorFieldApp::mouseMove( MouseEvent event )
+void LeapCinderRainApp::update()
 {
-	//m_VectorField->ClearPointTo();
-	//m_VectorField->CheckPointTo( event.getPos() );
-}
-
-void LeapCinderVectorFieldApp::mouseDrag( MouseEvent event )
-{
-	//m_VectorField->ClearPointTo();
-	//m_VectorField->CheckPointTo( event.getPos() );
-}
-
-
-void LeapCinderVectorFieldApp::update()
-{
+	calculateFrameTime();
+	m_Rain->Update( m_fFrameTime );
 	processFingers();
 }
 
-void LeapCinderVectorFieldApp::processFingers()
+void LeapCinderRainApp::processFingers()
 {
 	Leap::Frame frame = m_LeapController.frame();
 	Leap::FingerList fingers = frame.fingers();
 
-	m_VectorField->ClearPointTo();
+	m_Rain->ClearPointTo();
 
 	for( int i = 0; i < fingers.count(); i++ )
 	{
-		m_VectorField->CheckPointTo( normalizeCoords( fingers[i].tipPosition() ) );
+		m_Rain->CheckPointTo( normalizeCoords( fingers[i].tipPosition() ), 40.0f );
 	}
 }
 
 /** stole this from the gesture demo, this is unsafe because if you run coords through it
 multiple times, it will no longer actually be normalized */
-Vec2f LeapCinderVectorFieldApp::normalizeCoords( const Leap::Vector& vec ) {
+Vec2f LeapCinderRainApp::normalizeCoords( const Leap::Vector& vec ) {
 	static const float INTERACTION_CENTER_X = 0;
 	static const float INTERACTION_CENTER_Y = 200;
 	static const float INTERACTION_CENTER_Z = 0;
@@ -112,27 +95,24 @@ Vec2f LeapCinderVectorFieldApp::normalizeCoords( const Leap::Vector& vec ) {
 	return result;
 }
 
-void LeapCinderVectorFieldApp::draw()
+void LeapCinderRainApp::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) ); 
 
-	if( m_BGImage )
-		gl::draw( m_BGImage, getWindowBounds() );
-
-	m_VectorField->Draw();
+	m_Rain->Draw();
 }
 
-void LeapCinderVectorFieldApp::shutdown()
+void LeapCinderRainApp::shutdown()
 {
 	m_LeapController.removeListener( m_LeapListener );
-	delete m_VectorField;
+	delete m_Rain;
 }
 
-void LeapCinderVectorFieldApp::calculateFrameTime()
+void LeapCinderRainApp::calculateFrameTime()
 {
 	m_fFrameTime = getElapsedSeconds() - m_fLastTime;
 	m_fLastTime = getElapsedSeconds();
 }
 
-CINDER_APP_NATIVE( LeapCinderVectorFieldApp, RendererGl )
+CINDER_APP_NATIVE( LeapCinderRainApp, RendererGl )
